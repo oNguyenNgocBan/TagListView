@@ -11,6 +11,9 @@ import UIKit
 @IBDesignable
 open class TagView: UIButton {
 
+    /// Set value > 0 for fixed width. <= 0 for dynamic width
+    var fixedWidth: CGFloat = 0
+
     @IBInspectable open var cornerRadius: CGFloat = 0 {
         didSet {
             layer.cornerRadius = cornerRadius
@@ -160,7 +163,8 @@ open class TagView: UIButton {
         setupView()
     }
     
-    public init(title: String) {
+    public init(title: String, fixedWidth: CGFloat = 0) {
+        self.fixedWidth = fixedWidth
         super.init(frame: CGRect.zero)
         setTitle(title, for: UIControl.State())
         
@@ -186,6 +190,9 @@ open class TagView: UIButton {
 
     override open var intrinsicContentSize: CGSize {
         var size = titleLabel?.text?.size(withAttributes: [NSAttributedString.Key.font: textFont]) ?? CGSize.zero
+        if fixedWidth > 0 {
+            size.width = fixedWidth
+        }
         size.height = textFont.pointSize + paddingY * 2
         size.width += paddingX * 2
         if size.width < size.height {

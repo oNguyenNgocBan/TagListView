@@ -94,7 +94,17 @@ open class TagListView: UIView {
             }
         }
     }
-    
+
+    /// Set value > 0 for fixed width. <= 0 for dynamic width
+    @IBInspectable open var fixedWidth: CGFloat = 0 {
+        didSet {
+            defer { rearrangeViews() }
+            tagViews.forEach {
+                $0.fixedWidth = fixedWidth
+            }
+        }
+    }
+
     @IBInspectable open dynamic var paddingY: CGFloat = 2 {
         didSet {
             defer { rearrangeViews() }
@@ -328,7 +338,12 @@ open class TagListView: UIView {
     }
     
     private func createNewTagView(_ title: String) -> TagView {
-        let tagView = TagView(title: title)
+        let tagView: TagView
+        if fixedWidth > 0 {
+            tagView = TagView(title: title, fixedWidth: fixedWidth)
+        } else {
+            tagView = TagView(title: title)
+        }
         
         tagView.textColor = textColor
         tagView.selectedTextColor = selectedTextColor
